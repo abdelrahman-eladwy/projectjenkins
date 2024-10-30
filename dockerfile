@@ -7,13 +7,9 @@ FROM node:18-alpine AS builder
 WORKDIR /react-docker-example
 
 # Add and extract the repository directly using ADD
-ADD https://github.com/abdelrahman-eladwy/react-docker-example/archive/refs/heads/main.zip ./
+ADD https://github.com/abdelrahman-eladwy/react-docker-example.git ./
 
-# Install unzip and extract the project files
-RUN apk add --no-cache unzip && \
-    unzip main.zip && \
-    mv react-docker-example-main/* . && \
-    rm -rf react-docker-example-main main.zip
+
 
 # Install dependencies
 RUN npm install
