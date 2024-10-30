@@ -2,12 +2,12 @@ pipeline {
     agent any  // Use any available Jenkins agent
 
     environment {
-        IMAGE_NAME = 'your-dockerhub-username/your-app'
+        IMAGE_NAME = 'eladwy/firstproject'
         IMAGE_TAG = 'latest'
-        DOCKER_REGISTRY_CREDENTIALS = 'docker-hub-credentials'  // Jenkins credential ID
     }
 
     stages {
+        
         stage('Checkout Code') {
             steps {
                 // Clone the code repository from GitHub
@@ -25,30 +25,17 @@ pipeline {
                 }
             }
         }
-
-        stage('Login to Docker Hub') {
-            steps {
-                script {
-                    // Login to Docker Hub using credentials stored in Jenkins
-                    withCredentials([usernamePassword(credentialsId: DOCKER_REGISTRY_CREDENTIALS, 
-                            usernameVariable: 'DOCKER_USER', 
-                            passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin'
-                    }
-                }
-            }
+stage('Docker Push') {
+      agent any
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+          sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
+                    
         }
+      }
+        
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    // Push the built image to Docker Hub
-                    sh """
-                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                    """
-                }
-            }
-        }
 
         stage('Deploy Docker Container') {
             steps {
