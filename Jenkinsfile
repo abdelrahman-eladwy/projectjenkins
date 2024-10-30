@@ -7,11 +7,10 @@ pipeline {
     }
 
     stages {
-        
         stage('Checkout Code') {
             steps {
                 // Clone the code repository from GitHub
-                git branch: 'main', url: 'https://github.com/your-username/your-repo.git'
+                git branch: 'main', url: 'https://github.com/abdelrahman-eladwy/projectjenkins.git'
             }
         }
 
@@ -25,17 +24,18 @@ pipeline {
                 }
             }
         }
-stage('Docker Push') {
-      agent any
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-          sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
-                    
-        }
-      }
-        
 
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerHub', 
+                    passwordVariable: 'dockerHubPassword', 
+                    usernameVariable: 'dockerHubUser')]) {
+                    // Login to Docker Hub and push the image
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
 
         stage('Deploy Docker Container') {
             steps {
