@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Clone the code repository from GitHub
-                git branch: 'main', url: 'https://github.com/abdelrahman-eladwy/react-docker-example.git'
+                git branch: 'main', url: 'https://github.com/abdelrahman-eladwy/projectjenkins.git'
             }
         }
 
