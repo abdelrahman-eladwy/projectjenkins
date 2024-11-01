@@ -53,9 +53,17 @@ pipeline {
     post {
         success {
             echo 'Docker image built, pushed, and deployed successfully!'
+            // Example email notification on success
+            mail to: 'abdoahmed32522@gmail.com',
+                 subject: "SUCCESS: Jenkins Job '${env.JOB_NAME}' (#${env.BUILD_NUMBER})",
+                 body: "The build succeeded! Check Jenkins for details: ${env.BUILD_URL}"
         }
         failure {
             echo 'Build or deployment failed!'
+            // Example email notification on failure
+            mail to: 'abdoahmed32522@gmail.com',
+                 subject: "FAILURE: Jenkins Job '${env.JOB_NAME}' (#${env.BUILD_NUMBER})",
+                 body: "The build failed! Check Jenkins for details: ${env.BUILD_URL}"
         }
     }
 }
